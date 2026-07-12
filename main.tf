@@ -7,10 +7,13 @@ resource "azurerm_dns_caa_record" "dns_caa_records" {
   zone_name           = each.value.zone_name
   tags                = each.value.tags
 
-  record {
-    flags = each.value.record.flags
-    tag   = each.value.record.tag
-    value = each.value.record.value
+  dynamic "record" {
+    for_each = each.value.record
+    content {
+      flags = record.value.flags
+      tag   = record.value.tag
+      value = record.value.value
+    }
   }
 }
 
